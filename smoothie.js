@@ -94,6 +94,7 @@
  *        Fix bug rendering issue in series fill when using scroll backwards, by @olssonfredrik
  *        Add title option, by @mesca
  *        Fix data drop stoppage by rejecting NaNs in append(), by @timdrysdale
+ * v1.36.1: Add enableTopYLabel setting to show hide top Y label (@luc-github)
  */
 
 ;(function(exports) {
@@ -209,10 +210,10 @@
    * whether it is replaced, or the values summed (defaults to false.)
    */
   TimeSeries.prototype.append = function(timestamp, value, sumRepeatedTimeStampValues) {
-	// Reject NaN
-	if (isNaN(timestamp) || isNaN(value)){
-		return
-	}  
+    // Reject NaN
+    if (isNaN(timestamp) || isNaN(value)){
+        return
+    }  
     // Rewind until we hit an older timestamp
     var i = this.data.length - 1;
     while (i >= 0 && this.data[i][0] > timestamp) {
@@ -399,6 +400,7 @@
       precision: 2,
       showIntermediateLabels: false,
       intermediateLabelSameAxis: true,
+      enableTopYLabel: true,
     },
     title: {
       text: '',
@@ -1018,7 +1020,7 @@
           maxLabelPos = chartOptions.scrollBackwards ? 0 : dimensions.width - context.measureText(maxValueString).width - 2,
           minLabelPos = chartOptions.scrollBackwards ? 0 : dimensions.width - context.measureText(minValueString).width - 2;
       context.fillStyle = chartOptions.labels.fillStyle;
-      context.fillText(maxValueString, maxLabelPos, chartOptions.labels.fontSize);
+      if(chartOptions.labels.enableTopYLabel)context.fillText(maxValueString, maxLabelPos, chartOptions.labels.fontSize);
       context.fillText(minValueString, minLabelPos, dimensions.height - 2);
     }
 
